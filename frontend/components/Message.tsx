@@ -38,6 +38,7 @@ export function MessageBubble({ message }: Props) {
           }
 
           if (content.kind === "audience") {
+            if (content.data.count === 0) return null;
             return <AudienceCard key={i} data={content.data} />;
           }
 
