@@ -129,7 +129,14 @@ async def run_agent_stream(messages: list[dict]) -> AsyncIterator[str]:
                 yield _sse({"type": "agent_step", "node": _TOOL_TO_PHASE[name], "status": "done"})
 
                 output = event.get("data", {}).get("output", {})
-                if isinstance(output, str):
+                # Newer LangGraph versions return a ToolMessage object instead of a raw dict
+                if hasattr(output, "content"):
+                    raw = output.content
+                    try:
+                        output = json.loads(raw) if isinstance(raw, str) else {}
+                    except (json.JSONDecodeError, TypeError):
+                        output = {}
+                elif isinstance(output, str):
                     try:
                         output = json.loads(output)
                     except (json.JSONDecodeError, TypeError):
