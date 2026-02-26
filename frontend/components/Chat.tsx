@@ -10,7 +10,7 @@ type PhaseStatus = "idle" | "running" | "done" | "error";
 
 const EXAMPLE_PROMPTS = [
   "Find jazz fans who haven't bought tickets in the last 3 months",
-  "Find high spenders who love blues or soul music",
+  "What campaign strategy should I use for high-spending blues fans?",
   "Find fans in Chicago who love EDM",
 ];
 
