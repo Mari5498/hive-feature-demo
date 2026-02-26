@@ -1,6 +1,7 @@
 import type { Message } from "@/lib/api";
 import { AudienceCard } from "./AudienceCard";
 import { CampaignPreview } from "./CampaignPreview";
+import ReactMarkdown from "react-markdown";
 
 interface Props {
   message: Message;
@@ -32,7 +33,19 @@ export function MessageBubble({ message }: Props) {
                     : "bg-[#16161f] border border-[#2a2a3a] text-gray-200 rounded-tl-sm"
                 }`}
               >
-                {content.text}
+                {isUser ? content.text : (
+                  <ReactMarkdown
+                    components={{
+                      p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                      ol: ({ children }) => <ol className="list-decimal list-outside ml-4 space-y-2 my-2">{children}</ol>,
+                      ul: ({ children }) => <ul className="list-disc list-outside ml-4 space-y-2 my-2">{children}</ul>,
+                      li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                      strong: ({ children }) => <strong className="text-white font-semibold">{children}</strong>,
+                    }}
+                  >
+                    {content.text}
+                  </ReactMarkdown>
+                )}
               </div>
             );
           }
