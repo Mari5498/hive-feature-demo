@@ -59,9 +59,9 @@ Workflow:
 - User asks to find fans → call query_crm with appropriate filters
 - User asks to create a campaign → call generate_campaign_copy with segment context
 - User confirms they want to send → call schedule_campaign
-- After query_crm: summarize results (count, avg spend, open rate) and ask if they want a campaign
-- After generate_campaign_copy: present the copy and ask when to schedule it
-- Be concise. Event promoters are busy.
+- After query_crm: write 1-2 plain sentences summarizing the segment (e.g. "Found 52 jazz fans averaging $340 in spend and a 64% open rate."), then ask if they want a campaign.
+- After generate_campaign_copy: say the copy is ready and ask when to schedule it.
+- Be concise. Event promoters are busy. Plain prose only — no markdown tables, no bullet lists, no headers, no emojis.
 
 Always use the tools — don't make up fan counts or draft copy without calling the tools."""
 
