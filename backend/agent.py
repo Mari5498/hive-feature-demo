@@ -122,7 +122,10 @@ async def run_agent_stream(messages: list[dict]) -> AsyncIterator[str]:
             name = event.get("name", "")
 
             # Tool started → emit phase as "running"
+            # For copy_writing: first close out the strategy phase, then start copy_writing
             if kind == "on_tool_start" and name in _TOOL_TO_PHASE:
+                if name == "generate_campaign_copy":
+                    yield _sse({"type": "agent_step", "node": "strategy", "status": "done"})
                 yield _sse({"type": "agent_step", "node": _TOOL_TO_PHASE[name], "status": "running"})
 
             # Tool finished → emit phase as "done" + structured data
@@ -143,8 +146,10 @@ async def run_agent_stream(messages: list[dict]) -> AsyncIterator[str]:
                     except (json.JSONDecodeError, TypeError):
                         output = {}
 
-                if name == "query_crm" and output.get("count", 0) >= 0:
+                if name == "query_crm" and output.get("count", 0) > 0:
                     yield _sse({"type": "audience_result", "data": output})
+                    # Audience found — signal that strategy phase is starting
+                    yield _sse({"type": "agent_step", "node": "strategy", "status": "running"})
 
                 elif name == "generate_campaign_copy" and "email" in output:
                     yield _sse({"type": "campaign_draft", "data": output})
